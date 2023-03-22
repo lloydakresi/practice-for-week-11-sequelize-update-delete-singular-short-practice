@@ -21,19 +21,50 @@ app.get('/puppies', async (req, res, next) => {
 // STEP 1: Update a puppy by id
 app.put('/puppies/:puppyId', async (req, res, next) => {
     // Your code here
+    const pupUpdate = await Puppy.findOne({
+        where: {
+            id : req.params.puppyId
+        }
+    })
+
+    if(req.body.age_yrs){
+        pupUpdate.age_yrs = req.body.age_yrs;
+    }
+
+    if(req.body.weight_lbs){
+        pupUpdate.weight_lbs = req.body.weight_lbs;
+    }
+
+    if(req.body.microchipped !== undefined){
+        pupUpdate.microchipped = req.body.microchipped;
+    }
+
+    await pupUpdate.save();
+
+    res.json({
+        message: "success!",
+        puppy: pupUpdate
+    })
+
 })
 
 
 // STEP 2: Delete a puppy by id
 app.delete('/puppies/:puppyId', async (req, res, next) => {
     // Your code here
+    const goner = Puppy.findOne({
+        where: {
+            id: req.params.puppyId
+        }
+    });
+    goner.destroy();
 })
 
 
 // Root route - DO NOT MODIFY
 app.get('/', (req, res) => {
     res.json({
-        message: "API server is running"
+        message: "API server is running",
     });
 });
 
